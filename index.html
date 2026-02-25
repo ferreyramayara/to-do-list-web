@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+    <head>
+        <meta charset="UTF-8">
+        <title> To Do List </title>
+    </head>
+    <body>
+
+        <h1>Minha To Do List</h1>
+
+        <input type="text" id="titulo" placeholder="Digite o titulo da Tarefa">
+        <button onclick="adicionarTarefa()">Adicionar</button>
+
+        <script>
+            async function adicionarTarefa() {
+                const tituloInput = document.getElementById("titulo");
+                const titulo = tituloInput.value.trim();
+
+                if (titulo == "") {
+                    alert("O título não pode estar vazio!");
+                    return;
+                }
+
+                const response = await fetch("http://localhost:8080/tarefas", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+
+                     body: JSON.stringify({titulo: titulo})
+                });
+
+                if (response.ok) {
+                    tituloInput.value = "";
+                    alert("Tarefa criada com sucesso!");
+                } else {
+                    alert("Erro ao  criar tarefa")
+                }
+                }
+                
+                document.getElementById("titulo")
+                .addEventListener("keypress", function(event) {
+                    if (event.key === "Enter") {
+                        adicionarTarefa();
+                    }
+                });
+            
+        </script>
+
+    </body>
+</html>
