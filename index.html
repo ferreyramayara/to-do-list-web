@@ -10,11 +10,34 @@
 
         <input type="text" id="titulo" placeholder="Digite o titulo da Tarefa">
         <button onclick="adicionarTarefa()">Adicionar</button>
+        <ul id="lista"></ul>
 
         <script>
+            async function CarregarTarefas() {
+                    const response = await fetch("http://localhost:8080/tarefas");
+                    const tarefas = await response.json();
+
+                    const lista = document.getElementById("lista");
+                    lista.innerHTML = "";
+
+                    tarefas.forEach(tarefa => {
+                        const li = document.createElement("li");
+                        li.textContent = tarefa.titulo + "-" + tarefa.status;
+
+                        if (tarefa.status === "CONCLUIDA") {
+                            li.style.textDecoration = "line-through";
+                        }
+
+                        lista.appendChild(li);
+                    });
+                    
+                }
+
+
             async function adicionarTarefa() {
                 const tituloInput = document.getElementById("titulo");
                 const titulo = tituloInput.value.trim();
+
 
                 if (titulo == "") {
                     alert("O título não pode estar vazio!");
@@ -33,9 +56,12 @@
                 if (response.ok) {
                     tituloInput.value = "";
                     alert("Tarefa criada com sucesso!");
+                     CarregarTarefas();
                 } else {
                     alert("Erro ao  criar tarefa")
                 }
+
+               
                 }
                 
                 document.getElementById("titulo")
@@ -45,7 +71,8 @@
                     }
                 });
             
+                 window.onload = CarregarTarefas;
         </script>
-
+        
     </body>
 </html>
